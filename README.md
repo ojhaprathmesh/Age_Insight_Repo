@@ -4,6 +4,7 @@ Overview:
     The Age Finder application allows users to calculate and display the age difference between two selected dates: the birth date and the current date. The user interacts with the application through an intuitive graphical user interface (GUI).
 
 Key Features:
+
     - User-Friendly Interface:
         The GUI provides a visually appealing and user-friendly design.
         Calendar widgets are used for easy date selection.
@@ -19,11 +20,13 @@ Key Features:
         Labels dynamically update to show the selected birth and current dates, as well as the calculated age in days, months, and years.
 
 Repository Structure:
+
     - main.py: Contains the main script for the Age Finder application.
     - README.md: Provides documentation and instructions for using the application.
     - requirements.txt: Lists the required Python packages for easy setup.
 
 Usage Instructions:
+
     - Clone the repository to your local machine.
     - Install the required dependencies using pip install -r requirements.txt.
     - Run the Age_Finder_GUI.py script to launch the Age Finder application.
@@ -34,11 +37,13 @@ Usage Instructions:
     - The real-time clock at the bottom of the window continuously updates.
 
 Dependencies:
+
     - Python 3.x
     - Tkinter
     - tkcalendar
     - pytz
-    Exact version details mentioned in "requirements.txt" file.
+    
+Exact version details mentioned in "requirements.txt" file.
 
 Developer:
     Prathmesh Ojha
