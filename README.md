@@ -26,15 +26,16 @@
 ## Usage Instructions:
 1. Clone the repository to your local machine.
 2. Install the required dependencies using
+
     ```
     pip install -r requirements.txt
     ```
-3. Run the `Age_Insight_Application.py` script to launch the Age Insight application.
-4. Upon running the application, a GUI window will appear with the Age Insight interface.
-5. Use the calendar widget to select the birth date by clicking on the desired date.
-6. The current date is automatically set to the current date and time.
-7. The application will dynamically display the selected birth and current dates, as well as the calculated age in days, months, and years.
-8. The real-time clock at the bottom of the window continuously updates.
+4. Run the `Age_Insight_Application.py` script to launch the Age Insight application.
+5. Upon running the application, a GUI window will appear with the Age Insight interface.
+6. Use the calendar widget to select the birth date by clicking on the desired date.
+7. The current date is automatically set to the current date and time.
+8. The application will dynamically display the selected birth and current dates, as well as the calculated age in days, months, and years.
+9. The real-time clock at the bottom of the window continuously updates.
 
 ## Dependencies:
   - Python 3.x
