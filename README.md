@@ -25,7 +25,10 @@
 
 ## Usage Instructions:
   - Clone the repository to your local machine.
-  - Install the required dependencies using ```pip install -r requirements.txt```.
+  - Install the required dependencies using
+    ```
+    pip install -r requirements.txt
+    ```.
   - Run the `Age_Insight_Application.py` script to launch the Age Insight application.
   - Upon running the application, a GUI window will appear with the Age Insight interface.
   - Use the calendar widget to select the birth date by clicking on the desired date.
