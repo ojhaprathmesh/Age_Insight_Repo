@@ -7,6 +7,24 @@ from datetime import datetime as dt
 class AgeFinder:
     def __init__(self, self_root):
         self.root = self_root
+
+        self.birthInfo = ''
+        self.currentInfo = ''
+
+        self.birthCalendar = None
+        self.birthDateLabelFrame = None
+        self.currentDateLabelFrame = None
+        self.birthMonthLabelFrame = None
+        self.currentMonthLabelFrame = None
+        self.birthYearLabelFrame = None
+        self.currentYearLabelFrame = None
+        self.ageDaysLabelFrame = None
+        self.ageMonthsLabelFrame = None
+        self.ageYearsLabelFrame = None
+        self.ageDaysTextLabelFrame = None
+        self.ageMonthsTextLabelFrame = None
+        self.ageYearsTextLabelFrame = None
+        self.timeLabel = None
         self.initialize_ui()
 
     def initialize_ui(self):
@@ -14,9 +32,6 @@ class AgeFinder:
         self.root.geometry('800x500+200+50')
         self.root.title('Age Finder | Developed by Prathmesh')
         self.root.resizable(False, False)
-
-        self.birthInfo = ''
-        self.currentInfo = ''
 
         cal_frame = Frame(self.root, bd=4, relief=RIDGE, bg='white')
         cal_frame.place(x=0, y=0, relwidth=0.625, relheight=1)
@@ -34,16 +49,12 @@ class AgeFinder:
         self.birthCalendar.bind("<<CalendarSelected>>", lambda event: self.update_label())
         self.birthCalendar.place(x=0, y=0, relwidth=1, relheight=1)
 
-        for i in range(2):
+        for count, label in enumerate(["Birth Date", "Current Date"]):
             label_frame = LabelFrame(date_frame, bd=2, relief=RIDGE, bg='white')
-            label_frame.place(relx=0, rely=i / 2, relwidth=1, relheight=1 / 6)
+            label_frame.place(relx=0, rely=count / 2, relwidth=1, relheight=1 / 6)
 
-            if i == 0:
-                birth_date_label = Label(label_frame, text='Birth Date', font=('times new roman', 20, 'bold'))
-                birth_date_label.place(x=0, y=0, relwidth=1, relheight=1)
-            else:
-                current_date_label = Label(label_frame, text='Current Date', font=('times new roman', 20, 'bold'))
-                current_date_label.place(x=0, y=0, relwidth=1, relheight=1)
+            date_label = Label(label_frame, text=label, font=('times new roman', 20, 'bold'))
+            date_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         self.birthDateLabelFrame = LabelFrame(date_frame, bd=2, relief=RIDGE, bg='white')
         self.birthDateLabelFrame.place(relx=0, rely=1 / 6, relwidth=1 / 3, relheight=1 / 3)
@@ -84,7 +95,8 @@ class AgeFinder:
         age_years_text_label = Label(self.ageYearsTextLabelFrame, text='Year(s)', font=('times new roman', 18, 'bold'))
         age_years_text_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-        age_months_text_label = Label(self.ageMonthsTextLabelFrame, text='Month(s)', font=('times new roman', 18, 'bold'))
+        age_months_text_label = Label(self.ageMonthsTextLabelFrame, text='Month(s)',
+                                      font=('times new roman', 18, 'bold'))
         age_months_text_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         age_days_text_label = Label(self.ageDaysTextLabelFrame, text='Day(s)', font=('times new roman', 18, 'bold'))
@@ -118,64 +130,62 @@ class AgeFinder:
         self.currentInfo = ''.join(d_list)
 
     def process_dates(self):
-        while not self.birthInfo.isdigit() or len(self.birthInfo) != 8:
-            self.birthInfo = input('Enter Date in Correct Format:-')
 
-        while not self.currentInfo.isdigit() or len(self.currentInfo) != 8 or int(self.currentInfo[:4]) < int(self.birthInfo[-1]):
-            self.currentInfo = input('Enter Date In Correct Format:-')
+        birth_date, current_date, birth_month, current_month, birth_year, current_year = map(int, (self.birthInfo[:2],
+                                                                                                   self.currentInfo[6:],
+                                                                                                   self.birthInfo[2:4],
+                                                                                                   self.currentInfo[
+                                                                                                   4:6],
+                                                                                                   self.birthInfo[4:],
+                                                                                                   self.currentInfo[
+                                                                                                   :4]))
 
-        birthDate, currentDate, birthMonth, currentMonth, birthYear, currentYear = map(int, (self.birthInfo[:2],
-                                                                                            self.currentInfo[6:],
-                                                                                            self.birthInfo[2:4],
-                                                                                            self.currentInfo[4:6],
-                                                                                            self.birthInfo[4:],
-                                                                                            self.currentInfo[:4]))
-
-        if birthMonth == 2:
-            if birthYear % 4 != 0:
-                totalDays = 28  # Total Days
+        if birth_month == 2:
+            if birth_year % 4 != 0:
+                total_days = 28  # Total Days
             else:
-                totalDays = 29
+                total_days = 29
 
-        elif birthMonth % 2 == 0:
-            if birthMonth < 8:
-                totalDays = 30
+        elif birth_month % 2 == 0:
+            if birth_month < 8:
+                total_days = 30
             else:
-                totalDays = 31
+                total_days = 31
         else:
-            if birthMonth > 8:
-                totalDays = 30
+            if birth_month > 8:
+                total_days = 30
             else:
-                totalDays = 31
+                total_days = 31
 
-        if currentDate - birthDate < 0:
-            ageDays = totalDays - abs(currentDate - birthDate)
-            ageMonths = -1
+        if current_date - birth_date < 0:
+            age_days = total_days - abs(current_date - birth_date)
+            age_months = -1
         else:
-            ageDays = abs(currentDate - birthDate)
-            ageMonths = 0
+            age_days = abs(current_date - birth_date)
+            age_months = 0
 
-        if currentMonth - birthMonth < 1:
-            ageMonths += 12 - abs(currentMonth - birthMonth)
-            ageYears = -1
+        if current_month - birth_month < 1:
+            age_months += 12 - abs(current_month - birth_month)
+            age_years = -1
         else:
-            ageMonths += abs(currentMonth - birthMonth)
-            ageYears = 0
+            age_months += abs(current_month - birth_month)
+            age_years = 0
 
-        if ageMonths == 12:
-            ageMonths = 0
-            ageYears += 1
+        if age_months == 12:
+            age_months = 0
+            age_years += 1
 
-        ageYears = ageYears + abs(currentYear - birthYear)
+        age_years = age_years + abs(current_year - birth_year)
 
-        return (birthDate, birthDate, birthYear), (currentDate, currentMonth, currentYear), (ageDays, ageMonths, ageYears)
-    
+        return (birth_date, birth_date, birth_year), (current_date, current_month, current_year), (
+            age_days, age_months, age_years)
+
     def display_labels(self, req_tuple):
         label_frames = [self.birthDateLabelFrame, self.birthMonthLabelFrame, self.birthYearLabelFrame,
                         self.currentDateLabelFrame, self.currentMonthLabelFrame, self.currentYearLabelFrame,
                         self.ageDaysLabelFrame, self.ageMonthsLabelFrame, self.ageYearsLabelFrame]
 
-        labels_text = [req_tuple[i//3][i%3] for i in range(9)]
+        labels_text = [req_tuple[i // 3][i % 3] for i in range(9)]
         label_text_frames = zip(labels_text, label_frames)
 
         for text, frame in label_text_frames:
