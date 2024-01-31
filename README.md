@@ -24,14 +24,18 @@
   - **requirements.txt:** Lists the required Python packages for easy setup.
 
 ## Usage Instructions:
-  - Clone the repository to your local machine.
-  - Install the required dependencies using `pip install -r requirements.txt`.
-  - Run the `Age_Insight_Application.py` script to launch the Age Insight application.
-  - Upon running the application, a GUI window will appear with the Age Insight interface.
-  - Use the calendar widget to select the birth date by clicking on the desired date.
-  - The current date is automatically set to the current date and time.
-  - The application will dynamically display the selected birth and current dates, as well as the calculated age in days, months, and years.
-  - The real-time clock at the bottom of the window continuously updates.
+1. Clone the repository to your local machine.
+2. Install the required dependencies using
+
+    ```
+    pip install -r requirements.txt
+    ```
+4. Run the `Age_Insight_Application.py` script to launch the Age Insight application.
+5. Upon running the application, a GUI window will appear with the Age Insight interface.
+6. Use the calendar widget to select the birth date by clicking on the desired date.
+7. The current date is automatically set to the current date and time.
+8. The application will dynamically display the selected birth and current dates, as well as the calculated age in days, months, and years.
+9. The real-time clock at the bottom of the window continuously updates.
 
 ## Dependencies:
   - Python 3.x
@@ -39,7 +43,7 @@
   - tkcalendar
   - pytz
 
-Exact version details mentioned in "requirements.txt" file.
+Exact version details mentioned in `requirements.txt` file.
 
 ## Developer:
   Prathmesh Ojha
