@@ -2,196 +2,148 @@ from pytz import timezone
 from tkinter import Tk, Frame, Label, LabelFrame, RIDGE
 from tkcalendar import Calendar
 from datetime import datetime as dt
+import calendar
 
 
 class AgeFinder:
-    def __init__(self, self_root):
-        self.root = self_root
+    def __init__(self, root):
+        self.root = root
+        self.birth_info = ''
+        self.current_info = ''
 
-        self.birthInfo = ''
-        self.currentInfo = ''
+        # Store label references
+        self.birth_calendar = None
+        self.birth_date_labels = {}
+        self.current_date_labels = {}
+        self.age_labels = {}
+        self.time_label = None
 
-        self.birthCalendar = None
-        self.birthDateLabelFrame = None
-        self.currentDateLabelFrame = None
-        self.birthMonthLabelFrame = None
-        self.currentMonthLabelFrame = None
-        self.birthYearLabelFrame = None
-        self.currentYearLabelFrame = None
-        self.ageDaysLabelFrame = None
-        self.ageMonthsLabelFrame = None
-        self.ageYearsLabelFrame = None
-        self.ageDaysTextLabelFrame = None
-        self.ageMonthsTextLabelFrame = None
-        self.ageYearsTextLabelFrame = None
-        self.timeLabel = None
         self.initialize_ui()
 
     def initialize_ui(self):
-
+        """Initialize the user interface."""
         self.root.geometry('800x500+200+50')
         self.root.title('Age Finder | Developed by Prathmesh')
         self.root.resizable(False, False)
 
-        cal_frame = Frame(self.root, bd=4, relief=RIDGE, bg='white')
-        cal_frame.place(x=0, y=0, relwidth=0.625, relheight=1)
+        cal_frame = self.create_frame(self.root, 0, 0, 0.625, 1)
+        date_frame = self.create_frame(self.root, 5 / 8, 0, 0.375, 0.5)
+        age_frame = self.create_frame(self.root, 5 / 8, 0.5, 0.375, 1 / 3)
+        time_frame = self.create_frame(self.root, 5 / 8, 5 / 6, 0.375, 1 / 6)
 
-        date_frame = Frame(self.root, bd=4, relief=RIDGE, bg='white')
-        date_frame.place(relx=5 / 8, rely=0, relwidth=0.375, relheight=1 / 2)
+        self.birth_calendar = Calendar(cal_frame, selectmode='day', year=2000, month=1, day=1, date_pattern='ddmmyyyy')
+        self.birth_calendar.bind("<<CalendarSelected>>", lambda event: self.update_labels())
+        self.birth_calendar.place(x=0, y=0, relwidth=1, relheight=1)
 
-        age_frame = Frame(self.root, bd=4, relief=RIDGE, bg='white')
-        age_frame.place(relx=5 / 8, rely=1 / 2, relwidth=0.375, relheight=1 / 3)
+        self.setup_labels(date_frame, age_frame)
+        self.setup_time_label(time_frame)
 
-        time_frame = Frame(self.root, bd=4, relief=RIDGE, bg='white')
-        time_frame.place(relx=5 / 8, rely=5 / 6, relwidth=0.375, relheight=1 / 6)
-
-        self.birthCalendar = Calendar(cal_frame, selectmode='day', year=2000, month=1, day=1, date_pattern='ddmmyyyy')
-        self.birthCalendar.bind("<<CalendarSelected>>", lambda event: self.update_label())
-        self.birthCalendar.place(x=0, y=0, relwidth=1, relheight=1)
-
-        for count, label in enumerate(["Birth Date", "Current Date"]):
-            label_frame = LabelFrame(date_frame, bd=2, relief=RIDGE, bg='white')
-            label_frame.place(relx=0, rely=count / 2, relwidth=1, relheight=1 / 6)
-
-            date_label = Label(label_frame, text=label, font=('times new roman', 20, 'bold'))
-            date_label.place(x=0, y=0, relwidth=1, relheight=1)
-
-        self.birthDateLabelFrame = LabelFrame(date_frame, bd=2, relief=RIDGE, bg='white')
-        self.birthDateLabelFrame.place(relx=0, rely=1 / 6, relwidth=1 / 3, relheight=1 / 3)
-
-        self.currentDateLabelFrame = LabelFrame(date_frame, bd=2, relief=RIDGE, bg='white')
-        self.currentDateLabelFrame.place(relx=0, rely=2 / 3, relwidth=1 / 3, relheight=1 / 3)
-
-        self.birthMonthLabelFrame = LabelFrame(date_frame, bd=2, relief=RIDGE, bg='white')
-        self.birthMonthLabelFrame.place(relx=1 / 3, rely=1 / 6, relwidth=1 / 3, relheight=1 / 3)
-
-        self.currentMonthLabelFrame = LabelFrame(date_frame, bd=2, relief=RIDGE, bg='white')
-        self.currentMonthLabelFrame.place(relx=1 / 3, rely=2 / 3, relwidth=1 / 3, relheight=1 / 3)
-
-        self.birthYearLabelFrame = LabelFrame(date_frame, bd=2, relief=RIDGE, bg='white')
-        self.birthYearLabelFrame.place(relx=2 / 3, rely=1 / 6, relwidth=1 / 3, relheight=1 / 3)
-
-        self.currentYearLabelFrame = LabelFrame(date_frame, bd=2, relief=RIDGE, bg='white')
-        self.currentYearLabelFrame.place(relx=2 / 3, rely=2 / 3, relwidth=1 / 3, relheight=1 / 3)
-
-        self.ageDaysLabelFrame = LabelFrame(age_frame, bd=2, relief=RIDGE, bg='white')
-        self.ageDaysLabelFrame.place(relx=0, rely=1 / 2, relwidth=1 / 3, relheight=1 / 2)
-
-        self.ageMonthsLabelFrame = LabelFrame(age_frame, bd=2, relief=RIDGE, bg='white')
-        self.ageMonthsLabelFrame.place(relx=1 / 3, rely=1 / 2, relwidth=1 / 3, relheight=1 / 2)
-
-        self.ageYearsLabelFrame = LabelFrame(age_frame, bd=2, relief=RIDGE, bg='white')
-        self.ageYearsLabelFrame.place(relx=2 / 3, rely=1 / 2, relwidth=1 / 3, relheight=1 / 2)
-
-        self.ageDaysTextLabelFrame = LabelFrame(age_frame, bd=2, relief=RIDGE, bg='white')
-        self.ageDaysTextLabelFrame.place(relx=0, rely=0, relwidth=1 / 3, relheight=1 / 2)
-
-        self.ageMonthsTextLabelFrame = LabelFrame(age_frame, bd=2, relief=RIDGE, bg='white')
-        self.ageMonthsTextLabelFrame.place(relx=1 / 3, rely=0, relwidth=1 / 3, relheight=1 / 2)
-
-        self.ageYearsTextLabelFrame = LabelFrame(age_frame, bd=2, relief=RIDGE, bg='white')
-        self.ageYearsTextLabelFrame.place(relx=2 / 3, rely=0, relwidth=1 / 3, relheight=1 / 2)
-
-        age_years_text_label = Label(self.ageYearsTextLabelFrame, text='Year(s)', font=('times new roman', 18, 'bold'))
-        age_years_text_label.place(x=0, y=0, relwidth=1, relheight=1)
-
-        age_months_text_label = Label(self.ageMonthsTextLabelFrame, text='Month(s)',
-                                      font=('times new roman', 18, 'bold'))
-        age_months_text_label.place(x=0, y=0, relwidth=1, relheight=1)
-
-        age_days_text_label = Label(self.ageDaysTextLabelFrame, text='Day(s)', font=('times new roman', 18, 'bold'))
-        age_days_text_label.place(x=0, y=0, relwidth=1, relheight=1)
-
-        self.timeLabel = Label(time_frame, font=('times new roman', 36, 'bold'))
-        self.timeLabel.place(x=0, y=0, relwidth=1, relheight=1)
-
-        self.get_text()
+        self.update_labels()
         self.update_clock()
 
-    def update_label(self):
-        self.get_text()
+    def create_frame(self, parent, relx, rely, relwidth, relheight):
+        """Helper to create a frame with standard properties."""
+        frame = Frame(parent, bd=4, relief=RIDGE, bg='white')
+        frame.place(relx=relx, rely=rely, relwidth=relwidth, relheight=relheight)
+        return frame
+
+    def setup_labels(self, date_frame, age_frame):
+        """Set up labels for displaying birth date, current date, and calculated age."""
+        for count, label in enumerate(["Birth Date", "Current Date"]):
+            self.create_label(date_frame, label, 0, count / 2, 1, 1 / 6)
+
+        # Birth and current date label frames
+        self.birth_date_labels = self.create_date_labels(date_frame, 1 / 6, "Birth")
+        self.current_date_labels = self.create_date_labels(date_frame, 2 / 3, "Current")
+
+        # Age label frames
+        self.age_labels = self.create_age_labels(age_frame)
+
+    def create_date_labels(self, parent, rel_y, label_prefix):
+        """Create label frames for displaying day, month, and year."""
+        labels = {}
+        for i, label in enumerate(["Date", "Month", "Year"]):
+            labels[label.lower()] = self.create_label_frame(parent, relx=i / 3, rely=rel_y, relwidth=1 / 3,
+                                                            relheight=1 / 3)
+        return labels
+
+    def create_age_labels(self, parent):
+        """Create label frames for displaying age in days, months, and years."""
+        labels = {}
+        for i, label in enumerate(["Day(s)", "Month(s)", "Year(s)"]):
+            text_frame = self.create_label_frame(parent, relx=i / 3, rely=0, relwidth=1 / 3, relheight=1 / 2)
+            value_frame = self.create_label_frame(parent, relx=i / 3, rely=1 / 2, relwidth=1 / 3, relheight=1 / 2)
+
+            Label(text_frame, text=label, font=('times new roman', 18, 'bold')).place(x=0, y=0, relwidth=1, relheight=1)
+            labels[label.lower()] = value_frame
+        return labels
+
+    def create_label(self, parent, text, relx, rely, relwidth, relheight):
+        """Helper to create a text label."""
+        label_frame = LabelFrame(parent, bd=2, relief=RIDGE, bg='white')
+        label_frame.place(relx=relx, rely=rely, relwidth=relwidth, relheight=relheight)
+        label = Label(label_frame, text=text, font=('times new roman', 20, 'bold'))
+        label.place(x=0, y=0, relwidth=1, relheight=1)
+
+    def create_label_frame(self, parent, relx, rely, relwidth, relheight):
+        """Create a label frame."""
+        label_frame = LabelFrame(parent, bd=2, relief=RIDGE, bg='white')
+        label_frame.place(relx=relx, rely=rely, relwidth=relwidth, relheight=relheight)
+        return label_frame
+
+    def setup_time_label(self, time_frame):
+        """Set up the time label in the UI."""
+        self.time_label = Label(time_frame, font=('times new roman', 36, 'bold'))
+        self.time_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+    def update_labels(self):
+        """Update the birth date, current date, and age labels."""
+        self.get_dates()
+        birth_date, current_date, age = self.process_dates()
+
+        self.display_label_data(self.birth_date_labels, birth_date)
+        self.display_label_data(self.current_date_labels, current_date)
+        self.display_label_data(self.age_labels, age)
+
+    def display_label_data(self, labels_dict, data_tuple):
+        """Helper to display data in respective label frames."""
+        for key, value in zip(labels_dict.keys(), data_tuple):
+            Label(labels_dict[key], text=value, font=('times new roman', 30, 'bold')).place(x=0, y=0, relwidth=1,
+                                                                                            relheight=1)
+
+    def get_dates(self):
+        """Retrieve the birth date from the calendar and the current date."""
+        self.birth_info = self.birth_calendar.get_date()
+        self.current_info = dt.now().strftime("%d%m%Y")
+
+    def process_dates(self):
+        """Process birth and current dates to calculate age."""
+        birth_day, birth_month, birth_year = int(self.birth_info[:2]), int(self.birth_info[2:4]), int(
+            self.birth_info[4:])
+        current_day, current_month, current_year = int(self.current_info[:2]), int(self.current_info[2:4]), int(
+            self.current_info[4:])
+
+        birth_date = (birth_day, birth_month, birth_year)
+        current_date = (current_day, current_month, current_year)
+
+        birth = dt(birth_year, birth_month, birth_day)
+        current = dt(current_year, current_month, current_day)
+
+        age_delta = current - birth
+        age_years, age_months, age_days = age_delta.days // 365, (age_delta.days % 365) // 30, age_delta.days % 30
+
+        return birth_date, current_date, (age_days, age_months, age_years)
 
     def update_clock(self):
+        """Update the clock every second."""
         ist = timezone('Asia/Kolkata')
         raw_tz = dt.now(ist)
         time_now = raw_tz.strftime("%H:%M:%S %p")
-        self.timeLabel.config(text=time_now)
-        self.timeLabel.after(500, self.update_clock)
-
-    def get_text(self):
-        self.get_dates()
-        req_tuple = self.process_dates()
-        self.display_labels(req_tuple)
-
-    def get_dates(self):
-        self.birthInfo = self.birthCalendar.get_date()
-        x = str(dt.date(dt.now()))
-        d_list = [char for char in x if char != '-']
-        self.currentInfo = ''.join(d_list)
-
-    def process_dates(self):
-
-        birth_date, current_date, birth_month, current_month, birth_year, current_year = map(int, (self.birthInfo[:2],
-                                                                                                   self.currentInfo[6:],
-                                                                                                   self.birthInfo[2:4],
-                                                                                                   self.currentInfo[
-                                                                                                   4:6],
-                                                                                                   self.birthInfo[4:],
-                                                                                                   self.currentInfo[
-                                                                                                   :4]))
-
-        if birth_month == 2:
-            if birth_year % 4 != 0:
-                total_days = 28  # Total Days
-            else:
-                total_days = 29
-
-        elif birth_month % 2 == 0:
-            if birth_month < 8:
-                total_days = 30
-            else:
-                total_days = 31
-        else:
-            if birth_month > 8:
-                total_days = 30
-            else:
-                total_days = 31
-
-        if current_date - birth_date < 0:
-            age_days = total_days - abs(current_date - birth_date)
-            age_months = -1
-        else:
-            age_days = abs(current_date - birth_date)
-            age_months = 0
-
-        if current_month - birth_month < 1:
-            age_months += 12 - abs(current_month - birth_month)
-            age_years = -1
-        else:
-            age_months += abs(current_month - birth_month)
-            age_years = 0
-
-        if age_months == 12:
-            age_months = 0
-            age_years += 1
-
-        age_years = age_years + abs(current_year - birth_year)
-
-        return (birth_date, birth_date, birth_year), (current_date, current_month, current_year), (
-            age_days, age_months, age_years)
-
-    def display_labels(self, req_tuple):
-        label_frames = [self.birthDateLabelFrame, self.birthMonthLabelFrame, self.birthYearLabelFrame,
-                        self.currentDateLabelFrame, self.currentMonthLabelFrame, self.currentYearLabelFrame,
-                        self.ageDaysLabelFrame, self.ageMonthsLabelFrame, self.ageYearsLabelFrame]
-
-        labels_text = [req_tuple[i // 3][i % 3] for i in range(9)]
-        label_text_frames = zip(labels_text, label_frames)
-
-        for text, frame in label_text_frames:
-            Label(frame, text=text, font=('times new roman', 30, 'bold')).place(x=0, y=0, relwidth=1, relheight=1)
+        self.time_label.config(text=time_now)
+        self.time_label.after(500, self.update_clock)
 
 
+# Run the application
 root = Tk()
-obj = AgeFinder(root)
+app = AgeFinder(root)
 root.mainloop()
