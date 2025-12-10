@@ -1,11 +1,12 @@
-from pytz import timezone
+from pytz import timezone 
 from tkinter import (
     Tk, Frame, Label, LabelFrame, RIDGE,
-    Menu, messagebox, Toplevel
+    Menu, messagebox, Toplevel, PhotoImage
 )
 from tkcalendar import Calendar
 from datetime import datetime as dt
 import logging
+import os   # <-- NEW
 
 # Configure logging settings
 logging.basicConfig(
@@ -78,6 +79,17 @@ class AgeFinder:
             },
             'timezone': 'Asia/Kolkata'
         }
+
+        try:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            png_path = os.path.join(base_dir, "timer.png")
+
+            self.icon_png = PhotoImage(file=png_path)
+            self.root.iconphoto(True, self.icon_png)
+
+        except Exception as e:
+            logging.warning(f"Could not set PNG icon: {e}")
+
 
         # Store label references
         self.birth_calendar = None
