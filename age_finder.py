@@ -1,12 +1,12 @@
-from pytz import timezone 
+from pytz import timezone
 from tkinter import (
     Tk, Frame, Label, LabelFrame, RIDGE,
-    Menu, messagebox, Toplevel, PhotoImage
+    Menu, messagebox, PhotoImage
 )
 from tkcalendar import Calendar
 from datetime import datetime as dt
 import logging
-import os   # <-- NEW
+import os
 
 # Configure logging settings
 logging.basicConfig(
@@ -14,51 +14,6 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
-
-
-class ToolTip:
-    def __init__(self, widget, text):
-        """Initialize tooltip for a given widget with specified text"""
-        self.widget = widget
-        self.text = text
-
-        self.tooltip_window = None
-        self.widget.bind("<Enter>", self.show_tooltip)
-        self.widget.bind("<Leave>", self.hide_tooltip)
-
-    def show_tooltip(self, event=None):
-        """Show tooltip when mouse enters widget"""
-        if self.tooltip_window is not None:
-            return
-
-        # Get widget position
-        try:
-            x, y, _, _ = self.widget.bbox("insert")
-        except Exception:
-            x = y = 0
-
-        x += self.widget.winfo_rootx() + 25
-        y += self.widget.winfo_rooty() + 20
-
-        # Using Toplevel instead of a second Tk root
-        self.tooltip_window = Toplevel(self.widget)
-        self.tooltip_window.wm_overrideredirect(True)
-        self.tooltip_window.wm_geometry(f"+{x}+{y}")
-
-        label = Label(
-            self.tooltip_window,
-            text=self.text,
-            bg="yellow",
-            relief="solid",
-            borderwidth=1
-        )
-        label.pack()
-
-    def hide_tooltip(self, event=None):
-        """Hide tooltip when mouse leaves widget"""
-        if self.tooltip_window is not None:
-            self.tooltip_window.destroy()
-            self.tooltip_window = None
 
 
 class AgeFinder:
@@ -89,7 +44,6 @@ class AgeFinder:
 
         except Exception as e:
             logging.warning(f"Could not set PNG icon: {e}")
-
 
         # Store label references
         self.birth_calendar = None
@@ -133,10 +87,9 @@ class AgeFinder:
                                      lambda event: self.update_labels())
             self.birth_calendar.place(x=0, y=0, relwidth=1, relheight=1)
 
-            # Setup other UI components
+            # Setup UI sections
             self.setup_labels(date_frame, age_frame)
             self.setup_time_label(time_frame)
-            self.create_tooltips()
 
             # Initialize displays
             self.update_labels()
@@ -360,15 +313,6 @@ class AgeFinder:
             "About",
             "Age Finder\nDeveloped by Prathmesh\n\nSelect your birth date to see your age."
         )
-
-    # ----------------- TOOLTIPS -----------------
-
-    def create_tooltips(self):
-        """Attach tooltips to key widgets."""
-        try:
-            ToolTip(self.birth_calendar, "Select your date of birth here")
-        except Exception as e:
-            logging.warning(f"Failed to attach tooltip: {str(e)}")
 
 
 # Application entry point
