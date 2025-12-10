@@ -1,1 +1,8 @@
-Age_Insight_GUI/Age_Finder_Old.py
+# Ignore virtual environment directory
+.venv/
+
+# Ignore log files
+*.log
+
+# Ignore the deprecated code
+**old**
